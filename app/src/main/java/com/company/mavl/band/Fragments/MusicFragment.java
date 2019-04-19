@@ -6,14 +6,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
-
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import com.company.mavl.band.R;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -67,7 +65,7 @@ import java.util.ArrayList;
         return fragment;
     }
 
-    ListView myListViewForSongs; //ttt
+    ListView myListViewForSongs;
     String[] items;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,20 +76,33 @@ import java.util.ArrayList;
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        myListViewForSongs = (ListView) myListViewForSongs.findViewById(R.id.mySongListView);
 
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+
+
+
+        View fragmentView = inflater.inflate(R.layout.fragment_music, container, false);
+
+
+        myListViewForSongs = fragmentView.findViewById(R.id.mySongListView);
         runtimePermission();
+        return fragmentView;
 
     }
 
     public void runtimePermission() {
-        Dexter.withActivity(this)
+        Dexter.withActivity(getActivity())
                 .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse response) {
-
-                        display();
+                       display();
                     }
 
                     @Override
@@ -143,17 +154,12 @@ import java.util.ArrayList;
             items[i] = mySongs.get(i).getName().toString().replace(".mp3", "").replace(".wav", "");
 
         }
-
-        ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
+        ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, items);
         myListViewForSongs.setAdapter(myAdapter);
+
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-        Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_music, container, false);
-        }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -161,6 +167,7 @@ import java.util.ArrayList;
             mListener.onFragmentInteraction(uri);
         }
     }
+
 
     @Override
     public void onAttach(Context context) {
@@ -189,13 +196,5 @@ import java.util.ArrayList;
         void onFragmentInteraction(Uri uri);
     }
 
-
-    /*@Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_music);
-
-
-    }*/
 
 }
